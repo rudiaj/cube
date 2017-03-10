@@ -1,131 +1,217 @@
-<main id="users" class="mdl-layout__content">
-	<div class="page-content">
-
-		<div class="mdl-grid">
-			<div class="mdl-cell mdl-cell--12-col mdl-cell--4-col-tablet mdl-cell--6-col-phone">
-				<table class="mdl-data-table mdl-js-data-table">
-				<thead>
-					<tr>
-						<th class="mdl-data-table__cell--non-numeric">Name</th>
-						<th class="mdl-data-table__cell--non-numeric">Last name</th>
-						<th class="mdl-data-table__cell--non-numeric">Country</th>
-						<th class="mdl-data-table__cell--non-numeric">City</th>
-						<th class="mdl-data-table__cell--non-numeric">Zip</th>
-						<th class="mdl-data-table__cell--non-numeric">Phone</th>
-						<th class="mdl-data-table__cell--non-numeric">email</th>
-						<th class="mdl-data-table__cell--non-numeric">Edit</th>
-						<th class="mdl-data-table__cell--non-numeric">Delete</th>
-
-					</tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="user in vm.allUsers.contacts" id="{{user.id}}" ng-show="true">
-						<td class="mdl-data-table__cell--non-numeric">{{user.first_name}}</td>
-						<td class="mdl-data-table__cell--non-numeric">{{user.last_name}}</td>
-						<td class="mdl-data-table__cell--non-numeric">{{user.country}}</td>
-						<td class="mdl-data-table__cell--non-numeric">{{user.city}}</td>
-						<td class="mdl-data-table__cell--non-numeric">{{user.zip}}</td>
-						<td class="mdl-data-table__cell--non-numeric">{{user.phones}}</td>
-						<td class="mdl-data-table__cell--non-numeric">{{user.emails}}</td>
-						<td class="mdl-data-table__cell--non-numeric"><button class="mdl-button mdl-js-button mdl-button--primary" ng-click="vm.editContact(user.id)">
-							Edit
-						</button></td>
-						<td class="mdl-data-table__cell--non-numeric"><button class="mdl-button mdl-js-button mdl-button--accent" ng-click="vm.deleteContact(user.id)">
-							Delete
-						</button></td>
-					</tr>
-				</tbody>
-			</table>
-			</div>
-			<div class="mdl-cell mdl-cell--12-col mdl-cell--4-col-tablet mdl-cell--6-col-phone flex-center">
-			<button ng-click="vm.toggle=!vm.toggle" class="margin-24 mdl-button mdl-js-button mdl-button--raised mdl-button--colored">add</button>
-
-			<article ng-show="vm.toggle" class="mdl-cell mdl-cell--4-col mdl-cell--3-col-tablet mdl-cell--6-col-phone">
-
-			<form ng-submit="vm.putContacts()" novalidate name="userForm">
-				<div class="mdl-textfield mdl-js-textfield">
-					<input class="mdl-textfield__input" 
-					id="input1"
-					type="text" 
-					ng-maxlength="40"
-					pattern="[a-zA-Z]+" 
-					ng-model="vm.user.first_name"
-					ng-required="true"
-					>
-					<label class="mdl-textfield__label" for="input1">First name</label>
-				</div>
-				<div class="mdl-textfield mdl-js-textfield">
-
-					<input class="mdl-textfield__input" 
-					id="input2"
-					type="text" 
-					ng-maxlength="40"
-					pattern="[a-zA-Z]+" 
-					ng-model="vm.user.last_name"
-					>
-					<label class="mdl-textfield__label" for="input2">Last name</label>
-				</div>
-				<div class="mdl-textfield mdl-js-textfield">
-					<input class="mdl-textfield__input"
-					id="input3" 
-					type="text" 
-					ng-maxlength="40"
-					pattern="[a-zA-Z]+" 
-					ng-model="vm.user.city" 
-					>
-					<label class="mdl-textfield__label" for="input3">City</label>
-				</div>
-				<div class="mdl-textfield mdl-js-textfield">
-					<input class="mdl-textfield__input" 
-					id="input4"
-					type="text" 
-					ng-maxlength="40"
-					pattern="[a-zA-Z]+" 
-					ng-model="vm.user.country" 
-					>
-					<label class="mdl-textfield__label" for="input4">Country</label>
-				</div>
-				<div class="mdl-textfield mdl-js-textfield">
-					<input class="mdl-textfield__input" 
-					id="input5"
-					type="number" 
-					ng-maxlength="40"
-					ng-model="vm.user.zip" 
-					min="0"
-					>
-					<label class="mdl-textfield__label" for="input5">Zip<label>
-				</div>
-				<div class="mdl-textfield mdl-js-textfield">
-					<input class="mdl-textfield__input" 
-					id="input6"
-					type="email" 
-					ng-model="vm.user.emails" 
-					>
-					<label class="mdl-textfield__label" for="input6">email</label>
-				</div>
-				<div class="mdl-textfield mdl-js-textfield">
-					<input class="mdl-textfield__input" 
-					id="input7"
-					type="number" 
-					ng-model="vm.user.phone" 
-					ng-maxlength="12" 
-					min="0"
-					>
-					<label class="mdl-textfield__label" for="input7">number</label>
-				</div>
-
-				<button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="submit" ng-disabled="userForm.$invalid"
-				>Edit profile</button>
-
-			</form>
-			</article>
-				
-			</div>
-		
+  <header class="mdl-layout__header">
+  	<acme-navbar creation-date="main.creationDate"></acme-navbar>
+  </header>
+  <main id="users" class="mdl-layout__content">
+  	<div class="page-content ">
 
 
-			
-			
-		</div>
-	</div>
-</main>
+  		<dialog id="editUserDialog" class="mdl-dialog">
+  			<h4 class="mdl-dialog__title">Edit user</h4>
+  			<div class="mdl-dialog__content">
+  				<form ng-submit="vm.changeContact()" novalidate name="userEditForm">
+  					<div class="mdl-textfield mdl-js-textfield">
+  						<input class="mdl-textfield__input" 
+  						id="input_1"
+  						type="text" 
+  						ng-maxlength="40"
+  						pattern="[a-zA-Z]+" 
+  						ng-model="vm.userEdit.first_name"
+  						ng-required="true"
+  						>
+  						<label ng-if="!vm.userEdit.first_name" class="mdl-textfield__label" for="input_1">First name</label>
+
+  					</div>
+  					<div class="mdl-textfield mdl-js-textfield">
+
+  						<input class="mdl-textfield__input" 
+  						id="input_2"
+  						type="text" 
+  						ng-maxlength="40"
+  						pattern="[a-zA-Z]+" 
+  						ng-model="vm.userEdit.last_name">
+  						<label ng-if="!vm.userEdit.last_name" class="mdl-textfield__label" for="input_2">Last name</label>
+  					</div>
+  					<div class="mdl-textfield mdl-js-textfield">
+  						<input class="mdl-textfield__input"
+  						id="input_3" 
+  						type="text" 
+  						ng-maxlength="40"
+
+  						ng-model="vm.userEdit.city" 
+  						>
+  						<label ng-if="!vm.userEdit.city" class="mdl-textfield__label" for="input_3">City</label>
+  					</div>
+  					<select name="repeatSelect" id="repeatSelect" ng-model="vm.userEdit.country">
+  						<option  ng-repeat="country in vm.countries" value="{{country.name}}">{{country.name}}</option>
+  					</select>
+  					<div class="mdl-textfield mdl-js-textfield">
+  						<input class="mdl-textfield__input" 
+  						id="input_5"
+  						type="number" 
+  						ng-maxlength="40"
+  						ng-model="vm.userEdit.zip" 
+  						min="0"
+  						>
+  						<label ng-if="!vm.userEdit.zip" class="mdl-textfield__label" for="input_5">Zip</label>
+  					</div>
+  					<div class="mdl-textfield mdl-js-textfield">
+  						<input class="mdl-textfield__input" 
+  						id="input_6"
+  						type="email" 
+  						ng-model="vm.userEdit.emails" 
+  						>
+  						<label ng-if="!vm.userEdit.emails" class="mdl-textfield__label" for="input_6">Emails</label>
+  					</div>
+  					<div class="mdl-textfield mdl-js-textfield">
+  						<input class="mdl-textfield__input" 
+  						id="input_7"
+  						type="number" 
+  						ng-model="vm.userEdit.phone" 
+  						ng-maxlength="12" 
+  						min="0"
+  						>
+  						<label ng-if="!vm.userEdit.phone" class="mdl-textfield__label" for="input_7">Phone</label>
+  					</div>
+
+  					<button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="submit" ng-disabled="userEditForm.$invalid"
+  					>Update user</button>
+
+  				</form>
+  				
+  			</div>
+  			<div class="mdl-dialog__actions">
+  				<button type="button" class="mdl-button" ng-click="vm.closeModal(1)">Close</button>
+  			</div>
+  		</dialog>
+  		<dialog id="addUserDialog" class="mdl-dialog">
+  			<h4 class="mdl-dialog__title">Add user</h4>
+  			<div class="mdl-dialog__content">
+  				<form ng-submit="vm.putContact()" novalidate name="userForm">
+  					<div class="mdl-textfield mdl-js-textfield">
+  						<input class="mdl-textfield__input" 
+  						id="input1"
+  						type="text" 
+  						ng-maxlength="40"
+  						pattern="[a-zA-Z]+" 
+  						ng-model="vm.user.first_name"
+  						ng-required="true"
+  						>
+  						<label class="mdl-textfield__label" for="input1">First name</label>
+  					</div>
+  					<div class="mdl-textfield mdl-js-textfield">
+
+  						<input class="mdl-textfield__input" 
+  						id="input2"
+  						type="text" 
+  						ng-maxlength="40"
+  						pattern="[a-zA-Z]+" 
+  						ng-model="vm.user.last_name"
+  						>
+  						<label class="mdl-textfield__label" for="input2">Last name</label>
+  					</div>
+
+  					<div class="mdl-textfield mdl-js-textfield">
+  						<input class="mdl-textfield__input"
+  						id="input3" 
+  						type="text" 
+  						ng-maxlength="40"
+
+  						ng-model="vm.user.city" 
+  						>
+  						<label class="mdl-textfield__label" for="input3">City</label>
+  					</div>
+  					<div class="mdl-textfield mdl-js-textfield">
+  						<input class="mdl-textfield__input" 
+  						id="input5"
+  						type="number" 
+  						ng-maxlength="40"
+  						ng-model="vm.user.zip" 
+  						min="0"
+  						>
+  						<label class="mdl-textfield__label" for="input5">Zip<label>
+  						</div>
+  						<select name="repeatSelect" id="repeatSelect" ng-model="vm.user.country">
+  							<option  ng-repeat="country in vm.countries" value="{{country.name}}">{{country.name}}</option>
+  						</select>
+  						<div class="mdl-textfield mdl-js-textfield">
+  							<input class="mdl-textfield__input" 
+  							id="input6"
+  							type="email" 
+  							ng-model="vm.user.emails" 
+  							>
+  							<label class="mdl-textfield__label" for="input6">email</label>
+  						</div>
+  						<div class="mdl-textfield mdl-js-textfield">
+  							<input class="mdl-textfield__input" 
+  							id="input7"
+  							type="number" 
+  							ng-model="vm.user.phone" 
+  							ng-maxlength="12" 
+  							min="0"
+  							>
+  							<label class="mdl-textfield__label" for="input7">number</label>
+  						</div>
+
+  						<button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="submit" ng-disabled="userForm.$invalid"
+  						>Add user</button>
+
+  					</form>
+  				</div>
+  				<div class="mdl-dialog__actions">
+  					<button type="button" class="mdl-button" ng-click="vm.closeModal(2)">Close</button>
+  				</div>
+  			</dialog>
+
+  			<div class="mdl-grid">
+
+  				<div class="mdl-cell mdl-cell--12-col mdl-cell--4-col-tablet mdl-cell--6-col-phone center">
+  					<table class="mdl-data-table mdl-js-data-table">
+  						<thead>
+  							<tr>
+  								<th class="mdl-data-table__cell--non-numeric">Name</th>
+  								<th class="mdl-data-table__cell--non-numeric">Last name</th>
+  								<th class="mdl-data-table__cell--non-numeric">Country</th>
+  								<th class="mdl-data-table__cell--non-numeric">City</th>
+  								<th class="mdl-data-table__cell--non-numeric">Zip</th>
+  								<th class="mdl-data-table__cell--non-numeric">Phone</th>
+  								<th class="mdl-data-table__cell--non-numeric">email</th>
+  								<th class="mdl-data-table__cell--non-numeric">Edit</th>
+  								<th class="mdl-data-table__cell--non-numeric">Delete</th>
+
+  							</tr>
+  						</thead>
+  						<tbody>
+  							<tr ng-repeat="user in vm.allUsers.contacts" id="{{user.id}}" ng-show="true">
+  								<td class="mdl-data-table__cell--non-numeric">{{user.first_name}}</td>
+  								<td class="mdl-data-table__cell--non-numeric">{{user.last_name}}</td>
+  								<td class="mdl-data-table__cell--non-numeric">{{user.country}}</td>
+  								<td class="mdl-data-table__cell--non-numeric">{{user.city}}</td>
+  								<td class="mdl-data-table__cell--non-numeric">{{user.zip}}</td>
+  								<td class="mdl-data-table__cell--non-numeric">
+  									<ul>
+  										<li ng-repeat="phone in user.phones track by $index">{{phone}}</li>
+  									</ul>
+  								</td>
+  								<td class="mdl-data-table__cell--non-numeric">
+  									<ul>
+  										<li ng-repeat="email in user.emails  track by $index">{{email}}</li>
+  									</ul>
+  								</td>
+  								<td class="mdl-data-table__cell--non-numeric"><button class="mdl-button mdl-js-button mdl-button--primary" ng-click="vm.showModal(1); vm.sendUser(user) ">
+  									Edit
+  								</button></td>
+  								<td class="mdl-data-table__cell--non-numeric"><button class="mdl-button mdl-js-button mdl-button--accent" ng-click="vm.deleteContact(user.id)">
+  									Delete
+  								</button></td>
+  							</tr>
+  						</tbody>
+  					</table>
+  				</div>
+  				<div class="mdl-cell mdl-cell--12-col mdl-cell--4-col-tablet mdl-cell--6-col-phone flex-center">
+  					<button ng-click="vm.showModal(2)" class="margin-24 mdl-button mdl-js-button mdl-button--raised mdl-button--colored">add new user</button>
+
+
+  				</div>
+  			</div>
+  		</div>
+  	</main>
